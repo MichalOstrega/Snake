@@ -37,18 +37,37 @@ public class Controller {
 
     private SnakeGame snakeGame;
 
+    private GraphicsContext graphicsContext;
 
     public void initialize(Scene scene) {
         this.scene = scene;
+        graphicsContext = canvas.getGraphicsContext2D();
+
         buttonsAction();
         arrowsAction(scene);
-        snakeGame = new SnakeGame(position[0],position[1]);
+        snakeGame = new SnakeGame(position[0], position[1]);
+        snakeGame.setOnMove(() -> {
+            graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            graphicsContext.setFill(Color.BLUE);
+            for (Point point : snakeGame.getSnake().getBody()) {
 
-        GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
-        graphicsContext.setFill(Color.BLUE);
+                graphicsContext.fillRect(point.getX(), point.getY(), l1, l1);
+
+            }
+            graphicsContext.setFill(Color.GREEN);
+            graphicsContext.fillRect(snakeGame.getApple().getX(),snakeGame.getApple().getY(),l1,l1);
+            /*position[0] = snakeGame.getSnake().getHead().getX();
+            position[1] = snakeGame.getSnake().getHead().getY();
+            graphicsContext.fillRect(position[0], position[1], l1, l1);*/
+        });
+
+        snakeGame.start();
 
 
-        Thread thread = new Thread(() -> {
+
+
+
+        /*Thread thread = new Thread(() -> {
             for (int i = 0; i < 100; i++) {
 
                 changeDirection(l1, position);
@@ -67,7 +86,7 @@ public class Controller {
         thread.setDaemon(true);
 
 
-        thread.start();
+        thread.start();*/
 
 
     }
@@ -91,11 +110,12 @@ public class Controller {
                         case RIGHT:
                             direction = Direction.RIGHT;
                             break;
-                            default:
-                                break;
+                        default:
+                            break;
 
                     }
                 }
+                snakeGame.setDirection(direction);
             }
         });
     }

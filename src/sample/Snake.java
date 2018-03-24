@@ -1,11 +1,11 @@
 package sample;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Snake {
     private Point head;
-    private List<Point> body;
+    private Deque<Point> body;
+    private int jump = 10;
 
 
 
@@ -16,10 +16,18 @@ public class Snake {
                 '}';
     }
 
+    public Deque<Point> getBody() {
+        return body;
+    }
+
+    public void setBody(Deque<Point> body) {
+        this.body = body;
+    }
+
     public Snake(int x, int y) {
 
         this.head = new Point(x,y);
-        this.body = new ArrayList<>();
+        this.body = new ArrayDeque<>();
     }
 
     public Point getHead() {
@@ -30,51 +38,52 @@ public class Snake {
         this.head = head;
     }
 
-    public List<Point> getBody() {
-        return body;
-    }
 
-    public void setBody(List<Point> body) {
-        this.body = body;
-    }
 
-    public void move(Direction direction, int boundaryX, int boundaryY) {
+    public void move(Direction direction, int boundaryX, int boundaryY, int i,Point apple) {
 
-        body.add(new Point(head));
+        body.addLast(new Point(head));
+        if(i!=0) {
+            body.removeFirst();
+        }
+        Point tmpHead = new Point(head);
         switch (direction) {
             case UP:
-                if (head.getY()!=0){
-                    head.setY(head.getY()-1);
+                if (head.getY()>0){
+                    head.setY(head.getY()-jump);
                 }
                 else {
                     head.setY(boundaryY);
                 }
                 break;
             case DOWN:
-                if (head.getY()!=boundaryY) {
-                    head.setY(head.getY()+1);
+                if (head.getY()<boundaryY) {
+                    head.setY(head.getY()+jump);
                 }
                 else {
                     head.setY(0);
                 }
                 break;
             case LEFT:
-                if (head.getX()!=0) {
-                    head.setX(head.getX() - 1);
+                if (head.getX()>0) {
+                    head.setX(head.getX() - jump);
                 }
                 else {
                     head.setX(boundaryX);
                 }
                 break;
             case RIGHT:
-                if (head.getX()!=boundaryX){
-                    head.setX(head.getX()+1);
+                if (head.getX()<boundaryX){
+                    head.setX(head.getX()+jump);
 
                 }
                 else  {
                     head.setX(0);
                 }
                 break;
+        }
+        if (head.equals(apple)){
+            body.addLast(tmpHead);
         }
     }
 }
