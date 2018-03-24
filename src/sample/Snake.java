@@ -8,82 +8,70 @@ public class Snake {
     private int jump = 10;
 
 
+    public Snake(int x, int y) {
 
-    @Override
-    public String toString() {
-        return "Snake{" +
-                "head=" + head +
-                '}';
+        this.head = new Point(x, y);
+        this.body = new ArrayDeque<>();
+        body.addLast(head);
+    }
+
+
+    public Point getHead() {
+        return head;
     }
 
     public Deque<Point> getBody() {
         return body;
     }
 
-    public void setBody(Deque<Point> body) {
-        this.body = body;
-    }
 
-    public Snake(int x, int y) {
-
-        this.head = new Point(x,y);
-        this.body = new ArrayDeque<>();
-    }
-
-    public Point getHead() {
-        return head;
-    }
-
-    public void setHead(Point head) {
-        this.head = head;
-    }
-
-
-
-    public void move(Direction direction, int boundaryX, int boundaryY, int i,Point apple) {
-
+    public void move(Direction direction, int boundaryX, int boundaryY, Point apple) {
+        //Dodanie do kolejki punktu głowy
         body.addLast(new Point(head));
-        if(i!=0) {
-            body.removeFirst();
-        }
-        Point tmpHead = new Point(head);
+
+        //Określenie ruchu weża w zadeklarowanych granicach
         switch (direction) {
             case UP:
-                if (head.getY()>0){
-                    head.setY(head.getY()-jump);
-                }
-                else {
+                if (head.getY() > 0) {
+                    head.setY(head.getY() - jump);
+                } else {
                     head.setY(boundaryY);
                 }
                 break;
             case DOWN:
-                if (head.getY()<boundaryY) {
-                    head.setY(head.getY()+jump);
-                }
-                else {
+                if (head.getY() < boundaryY) {
+                    head.setY(head.getY() + jump);
+                } else {
                     head.setY(0);
                 }
                 break;
             case LEFT:
-                if (head.getX()>0) {
+                if (head.getX() > 0) {
                     head.setX(head.getX() - jump);
-                }
-                else {
+                } else {
                     head.setX(boundaryX);
                 }
                 break;
             case RIGHT:
-                if (head.getX()<boundaryX){
-                    head.setX(head.getX()+jump);
+                if (head.getX() < boundaryX) {
+                    head.setX(head.getX() + jump);
 
-                }
-                else  {
+                } else {
                     head.setX(0);
                 }
                 break;
         }
-        if (head.equals(apple)){
-            body.addLast(tmpHead);
+
+        //Jeżeli głowa nie napotkała jabłka to usuwamy pierwszy element z kolejki
+        if (!head.equals(apple)) {
+            body.removeFirst();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Snake{" +
+                "head=" + head +
+                '}';
     }
 }
